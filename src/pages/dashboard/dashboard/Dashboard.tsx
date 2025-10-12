@@ -5,28 +5,21 @@ import NotificationIcon from "@/components/SVG/NotificationIcon";
 import SearchIcon from "@/components/SVG/SearchIcon";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import DownArrowIcon from "@/components/SVG/DownArrowIcon";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+    Popover, PopoverContent, PopoverTrigger,
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
-import EventIcon from "@/components/SVG/EventIcon";
 import CalendarIcon from "@/components/SVG/CalendarIcon";
 import CircelIcon from "@/components/SVG/CircleIcon";
 import WatchIcon from "@/components/SVG/WatchIcon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import BagIcon from "@/components/SVG/BagIcon";
+import CorrectIcon from "@/components/SVG/CorrectIcon";
 
 type TEvent = {
     checkbox?: boolean;
@@ -42,6 +35,80 @@ type TEvent = {
     status: "Confirmed" | "Pending" | "Cancelled";
     action?: string
 };
+
+
+const notificationsData = [
+    {
+        title: "Booking Request Confirmed",
+        message: "Agent John confirmed booking for Artist X on Oct 5",
+        time: '2 hours age',
+        status: 'successful'
+    },
+    {
+        title: "Booking Request Pending",
+        message: "Agent Alice pending approval for Artist Y on Oct 6",
+        time: '9:46 am',
+        status: 'successful'
+    },
+    {
+        title: "Payment Received",
+        message: "Payment for Artist Z has been completed",
+        time: '9:46 am',
+        status: 'successful'
+    },
+];
+
+const tabsData = [
+    {
+        label: "All",
+        value: "all",
+        content: notificationsData, // dynamic content
+    },
+    {
+        label: "Books",
+        value: "books",
+        content: [
+            {
+                title: "Book 1", message: "Author A published on Oct 1", time: '9:46 am',
+                status: 'successful'
+            },
+            {
+                title: "Book 2", message: "Author B published on Oct 3", time: '9:46 am',
+                status: 'successful'
+            },
+        ],
+    },
+    {
+        label: "Event",
+        value: "event",
+        content: [
+            {
+                title: "Event 1", message: "Music festival on Oct 12", time: '9:46 am',
+                status: 'successful'
+            },
+            {
+                title: "Event 2", message: "Art exhibition on Oct 15", time: '9:46 am',
+                status: 'successful'
+            },
+        ],
+    },
+    {
+        label: "Payment",
+        value: "payment",
+        content: [
+            {
+                title: "Payment 1", message: "Payment completed for order #123", time: '9:46 am',
+                status: 'successful'
+            },
+            {
+                title: "Payment 2", message: "Payment pending for order #124", time: '9:46 am',
+                status: 'successful'
+            },
+        ],
+    },
+];
+
+
 
 const Dashboard = () => {
     const [events, setEvents] = useState<TEvent[]>([]);
@@ -164,6 +231,7 @@ const Dashboard = () => {
         data: events,
         columns,
         getCoreRowModel: getCoreRowModel(),
+
     });
 
     return (
@@ -175,10 +243,65 @@ const Dashboard = () => {
                 </div>
                 <div className="flex items-center gap-6">
                     <SearchIcon />
-                    <div className="relative inline-block">
-                        <NotificationIcon />
-                        <span className="w-[7px] h-[7px] bg-[#3F97FF] rounded-full absolute top-0 right-0"></span>
-                    </div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="flex items-center gap-1 rounded-[8px] px-4 py-1 text-[#637381] text-[12px] font-medium">
+                            <div className="relative inline-block">
+                                <NotificationIcon />
+                                <span className="w-[7px] h-[7px] bg-[#3F97FF] rounded-full absolute top-0 right-1"></span>
+                            </div>
+                        </DropdownMenuTrigger>
+
+                        <DropdownMenuContent
+                            align="end"
+                            sideOffset={6}
+                            className="w-[743px] animate-in slide-in-from-right-5"
+                        >
+                            <Tabs defaultValue="all" className="w-full">
+                                <TabsList className="flex gap-2 p-2 rounded-xl w-fit mx-auto bg-white">
+                                    {tabsData.map((tab) => (
+                                        <TabsTrigger
+                                            key={tab.value}
+                                            value={tab.value}
+                                            className="p-2 py-4 cursor-pointer rounded-[8px] text-sm font-medium transition-all duration-300 text-[#637381] data-[state=active]:bg-[#E9F4FE] w-[100px]"
+                                        >
+                                            {tab.label}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+
+                                {tabsData.map((tab) => (
+                                    <TabsContent key={tab.value} value={tab.value} className="mt-4">
+                                        {tab.content.map((item, index) => (
+                                            <div
+                                                key={index}
+                                                className="m-6 rounded-lg shadow-sm mt-4 p-4 border-l-[2px] border-[#74CAFF]"
+                                            >
+                                                <div className="flex justify-between items-start">
+                                                    <div className="flex items-center  gap-3">
+                                                        <div className="bg-[#E9F9FF] rounded-full flex justify-center items-center p-4">
+                                                            <BagIcon />
+                                                        </div>
+                                                        <div>
+                                                            <h2 className="text-[#212B36] font-medium">{item.title}</h2>
+                                                            <p className="text-[#888E9C] mt-2">{item.message}</p>
+                                                        </div>
+
+                                                    </div>
+                                                    <div className="flex flex-col items-end gap-2">
+                                                        <p className="text-[#888E9C]">{item.time}</p>
+                                                        {
+                                                            item?.status === "successful" && <CorrectIcon />
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </TabsContent>
+                                ))}
+                            </Tabs>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
                     <img className="w-[52px] h-[52px] rounded-full" src={UserIcon} alt="User" />
                 </div>
             </div>
@@ -253,7 +376,7 @@ const Dashboard = () => {
 
                         </div>
                     </div>
-                       <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
+                    <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
                         <div className="bg-[#2094F3] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
                             <h2>3</h2>
                             <h2>Sat</h2>
@@ -261,11 +384,11 @@ const Dashboard = () => {
                         <div>
                             <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
                                 <h2>The Midnight Hour</h2>
-                                <div className="flex items-center justify-center gap-2"><CircelIcon/> <span>DJ Nova</span></div>
+                                <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
                             </div>
                             <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
                                 <p>Top Music</p>
-                                <div className="flex items-center gap-1"><WatchIcon/> <span>10:00 PM - 12:00 PM</span></div>
+                                <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
                             </div>
                         </div>
                     </div>
@@ -277,11 +400,11 @@ const Dashboard = () => {
                         <div>
                             <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
                                 <h2>The Midnight Hour</h2>
-                                <div className="flex items-center justify-center gap-2"><CircelIcon/> <span>DJ Nova</span></div>
+                                <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
                             </div>
                             <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
                                 <p>Top Music</p>
-                                <div className="flex items-center gap-1"><WatchIcon/> <span>10:00 PM - 12:00 PM</span></div>
+                                <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
                             </div>
                         </div>
                     </div>
@@ -293,11 +416,11 @@ const Dashboard = () => {
                         <div>
                             <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
                                 <h2>The Midnight Hour</h2>
-                                <div className="flex items-center justify-center gap-2"><CircelIcon/> <span>DJ Nova</span></div>
+                                <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
                             </div>
                             <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
                                 <p>Top Music</p>
-                                <div className="flex items-center gap-1"><WatchIcon/> <span>10:00 PM - 12:00 PM</span></div>
+                                <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
                             </div>
                         </div>
                     </div>
@@ -309,11 +432,11 @@ const Dashboard = () => {
                         <div>
                             <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
                                 <h2>The Midnight Hour</h2>
-                                <div className="flex items-center justify-center gap-2"><CircelIcon/> <span>DJ Nova</span></div>
+                                <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
                             </div>
                             <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
                                 <p>Top Music</p>
-                                <div className="flex items-center gap-1"><WatchIcon/> <span>10:00 PM - 12:00 PM</span></div>
+                                <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
                             </div>
                         </div>
                     </div>
@@ -325,11 +448,11 @@ const Dashboard = () => {
                         <div>
                             <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
                                 <h2>The Midnight Hour</h2>
-                                <div className="flex items-center justify-center gap-2"><CircelIcon/> <span>DJ Nova</span></div>
+                                <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
                             </div>
                             <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
                                 <p>Top Music</p>
-                                <div className="flex items-center gap-1"><WatchIcon/> <span>10:00 PM - 12:00 PM</span></div>
+                                <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
                             </div>
                         </div>
                     </div>
@@ -341,11 +464,11 @@ const Dashboard = () => {
                         <div>
                             <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
                                 <h2>The Midnight Hour</h2>
-                                <div className="flex items-center justify-center gap-2"><CircelIcon/> <span>DJ Nova</span></div>
+                                <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
                             </div>
                             <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
                                 <p>Top Music</p>
-                                <div className="flex items-center gap-1"><WatchIcon/> <span>10:00 PM - 12:00 PM</span></div>
+                                <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
                             </div>
                         </div>
                     </div>

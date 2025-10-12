@@ -45,11 +45,11 @@ export default function DashboardLayout() {
                 key={link.name}
                 to={link.path}
                 className={({ isActive }) =>
-                  `px-5 py-[10px] flex items-center gap-4 rounded-[8px] text-gray-600 hover:bg-[#3F97FF] ${isActive ? "bg-[#3F97FF] text-white" : ""
+                  `px-5 py-[10px] flex items-center gap-4 rounded-[8px] text-gray-600 hover:bg-[#3F97FF] hover:text-white ${isActive ? "bg-[#3F97FF] text-white" : ""
                   }`
                 }
               >
-                <Icon />
+                <span className="text-inherit hover:text-white"><Icon/></span>
                 <h2>{link.name}</h2>
               </NavLink>
             );
