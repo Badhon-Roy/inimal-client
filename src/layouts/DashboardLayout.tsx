@@ -1,15 +1,16 @@
 import { NavLink, Outlet } from "react-router-dom";
 import LogoIcon from "@/assets/images/Logo.svg";
 import LogoName from "@/assets/images/inimal.svg";
-import HomeIcon from "@/assets/images/home-2.svg";
-import FrameIcon from "@/assets/images/Frame.svg";
-import SettingIcon from "@/assets/images/setting-2.svg";
+
 import { useState } from "react";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
+import HomeIcon from "@/components/SVG/HomeIcon";
+import EventIcon from "@/components/SVG/EventIcon";
+import SettingIcon from "@/components/SVG/SettingIcon";
 
 const navLinks = [
   { name: "Dashboard", path: "/", svg: HomeIcon },
-  { name: "Events", path: "/about", svg: FrameIcon },
+  { name: "Events", path: "/about", svg: EventIcon },
   { name: "Settings", path: "/contact", svg: SettingIcon },
 ];
 
@@ -37,19 +38,22 @@ export default function DashboardLayout() {
           />
         </div>
         <nav className="flex flex-col space-y-5">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              className={({ isActive }) =>
-                `px-5 py-[10px] flex items-center gap-4 rounded-[8px] text-gray-600 hover:bg-[#3F97FF] ${isActive ? "bg-[#3F97FF] text-white" : ""
-                }`
-              }
-            >
-              <img src={link.svg} alt={`${link.name} icon`} className="inline-block mr-2" />
-              <h2> {link.name}</h2>
-            </NavLink>
-          ))}
+          {navLinks.map((link) => {
+            const Icon = link.svg;
+            return (
+              <NavLink
+                key={link.name}
+                to={link.path}
+                className={({ isActive }) =>
+                  `px-5 py-[10px] flex items-center gap-4 rounded-[8px] text-gray-600 hover:bg-[#3F97FF] ${isActive ? "bg-[#3F97FF] text-white" : ""
+                  }`
+                }
+              >
+                <Icon />
+                <h2>{link.name}</h2>
+              </NavLink>
+            );
+          })}
         </nav>
       </aside>
 
@@ -82,20 +86,22 @@ export default function DashboardLayout() {
             <img src={LogoName} alt="Logo" className="h-[24.844px] w-[94.111px]" />
           </div>
           <nav className="flex flex-col space-y-5">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.path}
-                onClick={closeDrawer}
-                className={({ isActive }) =>
-                  `px-5 py-[10px] flex items-center gap-4 rounded-[8px] text-gray-600 hover:bg-[#3F97FF] ${isActive ? "bg-[#3F97FF] text-white" : ""
-                  }`
-                }
-              >
-                <img src={link.svg} alt={`${link.name} icon`} className="inline-block mr-2" />
-                <h2>{link.name}</h2>
-              </NavLink>
-            ))}
+            {navLinks.map((link) => {
+              const Icon = link.svg;
+              return (
+                <NavLink
+                  key={link.name}
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `px-5 py-[10px] flex items-center gap-4 rounded-[8px] text-gray-600 hover:bg-[#3F97FF] ${isActive ? "bg-[#3F97FF] text-white" : ""
+                    }`
+                  }
+                >
+                  <Icon />
+                  <h2>{link.name}</h2>
+                </NavLink>
+              );
+            })}
           </nav>
         </aside>
       </div>
