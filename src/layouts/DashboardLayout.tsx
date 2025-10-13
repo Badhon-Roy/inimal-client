@@ -10,7 +10,7 @@ import SettingIcon from "@/components/SVG/SettingIcon";
 
 const navLinks = [
   { name: "Dashboard", path: "/", svg: HomeIcon },
-  { name: "Events", path: "/about", svg: EventIcon },
+  { name: "Events", path: "/events", svg: EventIcon },
   { name: "Settings", path: "/contact", svg: SettingIcon },
 ];
 
@@ -21,7 +21,7 @@ export default function DashboardLayout() {
   const closeDrawer = () => setDrawerOpen(false);
 
   return (
-    <div className="flex h-screen bg-[#F9FAFB]">
+    <div className="flex h-screen overflow-y-auto custom-scroll bg-[#F9FAFB]">
 
       {/* Sidebar for large screens */}
       <aside className="hidden sm:flex sm:flex-col w-[260px] bg-white text-[#637381] py-[31px] px-4">

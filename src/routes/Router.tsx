@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import DashboardLayout from "../layouts/DashboardLayout";   
 import Dashboard from "@/pages/dashboard/dashboard/Dashboard";
+import Events from "@/pages/dashboard/events/Events";
 
 const router = createBrowserRouter([
   {
@@ -10,6 +11,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Dashboard />,
+      },
+      {
+        path: "/events",
+        element: <Events />,
       }
     ],
   },
