@@ -1,40 +1,51 @@
 import DeleteIcon from "@/components/SVG/DeleteIcon";
 import EditIcon from "@/components/SVG/EditIcon";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import DownArrowIcon from "@/components/SVG/DownArrowIcon";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-    Popover, PopoverContent, PopoverTrigger,
-} from "@/components/ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import CalendarIcon from "@/components/SVG/CalendarIcon";
 import CircelIcon from "@/components/SVG/CircleIcon";
 import WatchIcon from "@/components/SVG/WatchIcon";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from "@/components/ui/pagination"
 import type { TEvent } from "@/types/event";
 import DashboardTopbar from "@/shared/dashboard/dashboardTopbar/DashboardTopbar";
-
-
-
-
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
+import AlertIcon from "@/components/SVG/AlertIcon";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { TUpcommingEvent } from "@/types";
 
 
 const Dashboard = () => {
     const [events, setEvents] = useState<TEvent[]>([]);
+    const [upcomingEvents, setupcomingEvents] = useState<TUpcommingEvent[]>([]);
     const [date, setDate] = useState<Date | undefined>(undefined);
     const [eventTimeSelected, setEventTimeSelected] = useState("Recent");
+    const [activePage, setActivePage] = useState(1);
+    const maximumEventsNumber = 8;
+    const totalPage = Math.ceil(events.length / maximumEventsNumber);
+    const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1)
+    const paginatedEvents = useMemo(() => {
+        return events.slice(
+            (activePage - 1) * maximumEventsNumber,
+            activePage * maximumEventsNumber
+        );
+    }, [events, activePage]);
+
+    const handlePrev = () => {
+        setActivePage(activePage - 1)
+    }
+
+    const handleNext = () => {
+        setActivePage(activePage + 1)
+    }
+
+
 
     useEffect(() => {
         fetch("/events.json")
@@ -42,6 +53,18 @@ const Dashboard = () => {
             .then((data) => setEvents(data))
             .catch((err) => console.error("Error fetching events:", err));
     }, []);
+    useEffect(() => {
+        fetch("/upcomingEvent.json")
+            .then((res) => res.json())
+            .then((data) => setupcomingEvents(data))
+            .catch((err) => console.error("Error fetching events:", err));
+    }, []);
+
+    // event delete system
+    const handleEventDelete = (id: number) => {
+        // TODO: apply delte functionality
+        setEvents((preEvents) => preEvents?.filter((event) => event.id !== id))
+    }
 
     const columnHelper = createColumnHelper<TEvent>();
 
@@ -138,10 +161,42 @@ const Dashboard = () => {
             header: () => (
                 <span className="text-[#212B36] font-normal">Action</span>
             ),
-            cell: () => {
+            cell: (info) => {
+                const row = info.row.original;
                 return (
                     <div className="flex gap-3">
-                        <button className="border border-[#F4F6F8] p-3 rounded-[6px] bg-[#FFF] cursor-pointer hover:bg-[#F9FAFB] text-[#919eab]"><DeleteIcon /></button>
+                        <Dialog>
+                            <DialogTrigger>
+                                <button className="border border-[#F4F6F8] p-3 rounded-[6px] bg-[#FFF] cursor-pointer hover:bg-[#F9FAFB] text-[#919eab]"><DeleteIcon /></button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <div className="w-[56px] h-[56px] rounded-full bg-[#FEE4E2] border-[9px] border-[#FEF3F2] flex justify-center items-center mb-4">
+                                        <AlertIcon />
+                                    </div>
+                                    <DialogTitle className="text-[24px] font-medium text-[#101828]">Delete</DialogTitle>
+                                    <DialogDescription className="text-[#667085]">
+                                        Are you sure you want to delete from this event?
+                                    </DialogDescription>
+                                    <div className="flex items-center justify-between gap-3">
+                                        <DialogClose asChild>
+                                            <button className="flex-1 bg-[#FFF]  cursor-pointer text-[#34405] font-medium px-10 py-3 rounded-[12px] hover:bg-opacity-90 mt-8 border border-[#D0D5DD] hover:border-[#3F97FF]"
+                                            >
+
+                                                Cancle
+                                            </button>
+                                        </DialogClose>
+                                        <button
+                                            onClick={() => handleEventDelete(row?.id)}
+                                            className="bg-[#3F97FF] flex-1 cursor-pointer text-white px-10 py-3 rounded-[12px] hover:bg-opacity-90 mt-8 font-semibold"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </DialogHeader>
+                            </DialogContent>
+                        </Dialog>
+
                         <button className="border border-[#F4F6F8] p-3 rounded-[6px] bg-[#FFF] cursor-pointer hover:bg-[#F9FAFB] text-[#889aac]"><EditIcon /></button>
                     </div>
                 )
@@ -150,7 +205,7 @@ const Dashboard = () => {
     ];
 
     const table = useReactTable({
-        data: events,
+        data: paginatedEvents,
         columns,
         getCoreRowModel: getCoreRowModel(),
 
@@ -210,22 +265,38 @@ const Dashboard = () => {
                     <Pagination className="mt-3 flex justify-start">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" className="hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white" />
+                                <button
+                                    disabled={activePage === 1}
+                                    onClick={handlePrev}
+                                    className={`py-2 px-4 rounded-[8px] flex items-center gap-1 transition-all 
+                                        ${activePage === 1
+                                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                            : "hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white cursor-pointer"
+                                        }`}
+                                >
+                                    <ChevronLeft size={20} /> <span>Prev</span>
+                                </button>
                             </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" className="bg-[#c8e5ff] text-[#3f97ff] hover:bg-[#c8e5ff] hover:text-[#3f97ff] font-medium">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" className="hover:bg-[#c8e5ff] hover:text-[#3f97ff]">2</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" className="hover:bg-[#c8e5ff] hover:text-[#3f97ff]">3</PaginationLink>
+                            <PaginationItem className="flex gap-2">
+                                {
+                                    pageNumbers?.map(number => <PaginationLink onClick={() => setActivePage(number)} href="#" className={` text-[#3f97ff] hover:bg-[#c8e5ff] hover:text-[#3f97ff] font-medium ${activePage === number && 'bg-[#c8e5ff]'}`}>{number}</PaginationLink>)
+                                }
                             </PaginationItem>
                             <PaginationItem>
                                 <PaginationEllipsis />
                             </PaginationItem>
                             <PaginationItem>
-                                <PaginationNext href="#" className="hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white" />
+                                <button
+                                    disabled={activePage === totalPage}
+                                    onClick={handleNext}
+                                    className={`py-2 px-4 rounded-[8px] flex items-center gap-1 transition-all 
+                                            ${activePage === totalPage
+                                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                            : "hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white"
+                                        }`}
+                                >
+                                    <span>Next</span> <ChevronRight size={20} />
+                                </button>
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
@@ -253,134 +324,26 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <div className="max-h-[580px] overflow-y-auto custom-scroll space-y-4">
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#2094F3] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>3</h2>
-                                <h2>Sat</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
+                        {
+                            upcomingEvents?.map(event => (
+                                <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
+                                    <div style={{ backgroundColor: event.color }} className=" flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
+                                        <h2>{event?.date}</h2>
+                                        <h2>{event?.day}</h2>
+                                    </div>
+                                    <div>
+                                        <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
+                                            <h2>{event?.title}</h2>
+                                            <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>{event?.dj}</span></div>
+                                        </div>
+                                        <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
+                                            <p>{event?.category}</p>
+                                            <div className="flex items-center gap-1"><WatchIcon /> <span>{event?.time}</span></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#0061C9] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>4</h2>
-                                <h2>Sun</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
-                                </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#0061C9] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>4</h2>
-                                <h2>Sun</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
-                                </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#0061C9] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>4</h2>
-                                <h2>Sun</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
-                                </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#2094F3] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>7</h2>
-                                <h2>Mun</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
-                                </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#0061C9] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>8</h2>
-                                <h2>Tue</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
-                                </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#2094F3] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>3</h2>
-                                <h2>Sat</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
-                                </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 p-3 rounded-[8px] bg-[#FFF] shadow-[0_0_6px_0_rgba(0,0,0,0.08)]">
-                            <div className="bg-[#2094F3] flex flex-col items-center  justify-center rounded-[8px] w-[46px] h-[58px] text-white font-semibold">
-                                <h2>3</h2>
-                                <h2>Sat</h2>
-                            </div>
-                            <div>
-                                <div className="flex justify-between items-center gap-3 text-[#637381] font-medium">
-                                    <h2>The Midnight Hour</h2>
-                                    <div className="flex items-center justify-center gap-2"><CircelIcon /> <span>DJ Nova</span></div>
-                                </div>
-                                <div className="flex justify-between items-center text-[#919EAB] text-[12px] mt-2">
-                                    <p>Top Music</p>
-                                    <div className="flex items-center gap-1"><WatchIcon /> <span>10:00 PM - 12:00 PM</span></div>
-                                </div>
-                            </div>
-                        </div>
+                            ))
+                        }
                     </div>
                 </div>
             </div>

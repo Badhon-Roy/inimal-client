@@ -1,7 +1,7 @@
 import DeleteIcon from "@/components/SVG/DeleteIcon";
 import EditIcon from "@/components/SVG/EditIcon";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import DownArrowIcon from "@/components/SVG/DownArrowIcon";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,18 +10,37 @@ import {
     PaginationContent,
     PaginationEllipsis,
     PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
+    PaginationLink
 } from "@/components/ui/pagination"
 import type { TEvent } from "@/types/event";
 import DashboardTopbar from "@/shared/dashboard/dashboardTopbar/DashboardTopbar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 
 
 const Events = () => {
     const [events, setEvents] = useState<TEvent[]>([]);
     const [eventTimeSelected, setEventTimeSelected] = useState("Recent");
+        const [activePage, setActivePage] = useState(1);
+        const maximumEventsNumber = 8;
+        const totalPage = Math.ceil(events.length / maximumEventsNumber);
+        const pageNumbers = Array.from({ length: totalPage }, (_, index) => index + 1)
+    
+        const paginatedEvents = useMemo(() => {
+            return events.slice(
+                (activePage - 1) * maximumEventsNumber,
+                activePage * maximumEventsNumber
+            );
+        }, [events, activePage]);
+    
+        const handlePrev = () => {
+            setActivePage(activePage - 1)
+        }
+    
+        const handleNext = () => {
+            setActivePage(activePage + 1)
+        }
+    
 
     useEffect(() => {
         fetch("/events.json")
@@ -144,7 +163,7 @@ const Events = () => {
     ];
 
     const table = useReactTable({
-        data: events,
+        data: paginatedEvents,
         columns,
         getCoreRowModel: getCoreRowModel(),
 
@@ -203,25 +222,41 @@ const Events = () => {
                 </div>
                 <Pagination className="mt-3 flex justify-start">
                     <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious href="#" className="hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white" />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#" className="bg-[#c8e5ff] text-[#3f97ff] hover:bg-[#c8e5ff] hover:text-[#3f97ff] font-medium">1</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#" className="hover:bg-[#c8e5ff] hover:text-[#3f97ff]">2</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationLink href="#" className="hover:bg-[#c8e5ff] hover:text-[#3f97ff]">3</PaginationLink>
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationEllipsis />
-                        </PaginationItem>
-                        <PaginationItem>
-                            <PaginationNext href="#" className="hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white" />
-                        </PaginationItem>
-                    </PaginationContent>
+                            <PaginationItem>
+                                <button
+                                    disabled={activePage === 1}
+                                    onClick={handlePrev}
+                                    className={`py-2 px-4 rounded-[8px] flex items-center gap-1 transition-all 
+                                        ${activePage === 1
+                                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                            : "hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white cursor-pointer"
+                                        }`}
+                                >
+                                    <ChevronLeft size={20}/> <span>Prev</span>
+                                </button>
+                            </PaginationItem>
+                            <PaginationItem className="flex gap-2">
+                                {
+                                    pageNumbers?.map(number => <PaginationLink onClick={() => setActivePage(number)} href="#" className={` text-[#3f97ff] hover:bg-[#c8e5ff] hover:text-[#3f97ff] font-medium ${activePage === number && 'bg-[#c8e5ff]'}`}>{number}</PaginationLink>)
+                                }
+                            </PaginationItem>
+                            <PaginationItem>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                            <PaginationItem>
+                                <button
+                                    disabled={activePage === totalPage}
+                                    onClick={handleNext}
+                                    className={`py-2 px-4 rounded-[8px] flex items-center gap-1 transition-all 
+                                            ${activePage === totalPage
+                                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                                            : "hover:bg-[#3f97ff] bg-[#c8e5ff] text-[#3f97ff] hover:text-white"
+                                        }`}
+                                >
+                                   <span>Next</span> <ChevronRight  size={20}/>
+                                </button>
+                            </PaginationItem>
+                        </PaginationContent>
                 </Pagination>
             </div>
         </div>

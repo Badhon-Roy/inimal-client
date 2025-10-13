@@ -1,0 +1,74 @@
+[
+  {
+    "date": 3,
+    "day": "Sat",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#2094F3"
+  },
+  {
+    "date": 4,
+    "day": "Sun",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#0061C9"
+  },
+  {
+    "date": 4,
+    "day": "Sun",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#0061C9"
+  },
+  {
+    "date": 4,
+    "day": "Sun",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#0061C9"
+  },
+  {
+    "date": 7,
+    "day": "Mun",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#2094F3"
+  },
+  {
+    "date": 8,
+    "day": "Tue",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#0061C9"
+  },
+  {
+    "date": 3,
+    "day": "Sat",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#2094F3"
+  },
+  {
+    "date": 3,
+    "day": "Sat",
+    "title": "The Midnight Hour",
+    "dj": "DJ Nova",
+    "category": "Top Music",
+    "time": "10:00 PM - 12:00 PM",
+    "color": "#2094F3"
+  }
+]

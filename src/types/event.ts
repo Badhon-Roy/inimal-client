@@ -1,4 +1,5 @@
 export type TEvent = {
+    id: number;
     checkbox?: boolean;
     name: string;
     key: string;
