@@ -5,9 +5,17 @@ import {
 } from "react-router-dom";
 import React from 'react';
 import router from './routes/Router';
+import { Toaster } from 'sonner';
 
 createRoot(document.getElementById('root')!).render(
- <React.StrictMode>
+  <React.StrictMode>
     <RouterProvider router={router} />
+    <Toaster position='top-center' className='bg-[#3f97ff]' duration={1000} toastOptions={{
+      style: {
+        backgroundColor: "#3f97ff",
+        color: "#ffffff",
+        borderRadius: "8px"
+      }
+    }} />
   </React.StrictMode>
 )

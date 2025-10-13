@@ -1,16 +1,10 @@
-import UserIcon from "@/assets/images/29041054cb8acf6b2c31d1de5a938ff62cad6577.png";
 import DeleteIcon from "@/components/SVG/DeleteIcon";
 import EditIcon from "@/components/SVG/EditIcon";
-import NotificationIcon from "@/components/SVG/NotificationIcon";
-import SearchIcon from "@/components/SVG/SearchIcon";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import DownArrowIcon from "@/components/SVG/DownArrowIcon";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import CorrectIcon from "@/components/SVG/CorrectIcon";
-import DownArrowIcon2 from "@/components/SVG/DownArrowIcon2";
 import {
     Pagination,
     PaginationContent,
@@ -21,13 +15,12 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import type { TEvent } from "@/types/event";
-import { tabsData } from "../dashboard/Dashboard";
+import DashboardTopbar from "@/shared/dashboard/dashboardTopbar/DashboardTopbar";
 
 
 
 const Events = () => {
     const [events, setEvents] = useState<TEvent[]>([]);
-    const [selected, setSelected] = useState("Last 24 Hours");
     const [eventTimeSelected, setEventTimeSelected] = useState("Recent");
 
     useEffect(() => {
@@ -159,87 +152,7 @@ const Events = () => {
 
     return (
         <div>
-            <div className="flex justify-between items-center mb-12">
-                <div>
-                    <h2 className="text-[32px] text-[#454F5B] font-bold">Upcoming Events</h2>
-                    <p className="text-[#454F5B]">Your upcoming events at a glance</p>
-                </div>
-                <div className="flex items-center gap-6">
-                    <SearchIcon />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger className="flex items-center gap-1 rounded-[8px] px-4 py-1 text-[#637381] text-[12px] font-medium">
-                            <div className="relative inline-block">
-                                <NotificationIcon />
-                                <span className="w-[7px] h-[7px] bg-[#3F97FF] rounded-full absolute top-0 right-1"></span>
-                            </div>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent
-                            align="end"
-                            sideOffset={6}
-                            className="w-[743px] animate-in slide-in-from-right-5"
-                        >
-                            <Tabs defaultValue="all" className="w-full">
-                                <div className="flex justify-between items-center sticky top-2 z-30">
-                                    <TabsList className="flex gap-2 p-2 rounded-xl w-fit bg-white">
-                                        {tabsData.map((tab) => (
-                                            <TabsTrigger
-                                                key={tab.value}
-                                                value={tab.value}
-                                                className="p-2 py-4 cursor-pointer rounded-[8px] text-sm font-medium transition-all duration-300 text-[#637381] data-[state=active]:bg-[#E9F4FE] w-[100px]"
-                                            >
-                                                {tab.label}
-                                            </TabsTrigger>
-                                        ))}
-                                    </TabsList>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger className="flex items-center gap-2 border border-[#F4F6F8] bg-white rounded-[8px] px-4 py-1 text-[#637381] text-[12px] font-medium">
-                                            <span>{selected} </span>
-                                            <DownArrowIcon2 /></DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => setSelected("Last 24 Hours")}>Last 24 Hours</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setSelected("Last Week")}>Last Week</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => setSelected("Last Month")}>Last Month</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-
-                                {tabsData.map((tab) => (
-                                    <TabsContent key={tab.value} value={tab.value} className="mt-4 max-h-[600px] overflow-y-auto custom-scroll">
-                                        {tab.content.map((item, index) => (
-                                            <div
-                                                key={index}
-                                                className="m-6 rounded-lg shadow-sm mt-4 p-4 border-l-[2px] border-[#74CAFF]"
-                                            >
-                                                <div className="flex justify-between items-start">
-                                                    <div className="flex items-center  gap-3">
-                                                        <div className="bg-[#E9F9FF] rounded-full flex justify-center items-center p-4">
-                                                            {item?.icon}
-                                                        </div>
-                                                        <div>
-                                                            <h2 className="text-[#212B36] font-medium">{item.title}</h2>
-                                                            <p className="text-[#888E9C] mt-2">{item.message}</p>
-                                                        </div>
-
-                                                    </div>
-                                                    <div className="flex flex-col items-end gap-2">
-                                                        <p className="text-[#888E9C]">{item.time}</p>
-                                                        {
-                                                            item?.status === "successful" && <CorrectIcon />
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </TabsContent>
-                                ))}
-                            </Tabs>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    <img className="w-[52px] h-[52px] rounded-full" src={UserIcon} alt="User" />
-                </div>
-            </div>
+            <DashboardTopbar title={"Upcoming Events"} subTitle={'Your upcoming events at a glance'} />
 
 
             <div className="w-full">
