@@ -7,10 +7,12 @@ import { IoMdClose, IoMdMenu } from "react-icons/io";
 import HomeIcon from "@/components/SVG/HomeIcon";
 import EventIcon from "@/components/SVG/EventIcon";
 import SettingIcon from "@/components/SVG/SettingIcon";
+import ProfileIcon from "@/components/SVG/ProfileIcon";
 
 const navLinks = [
   { name: "Dashboard", path: "/", svg: HomeIcon },
   { name: "Events", path: "/events", svg: EventIcon },
+  { name: "Profile", path: "/profile", svg: ProfileIcon },
   { name: "Settings", path: "/settings", svg: SettingIcon },
 ];
 

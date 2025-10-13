@@ -243,8 +243,8 @@ const Dashboard = () => {
             cell: () => {
                 return (
                     <div className="flex gap-3">
-                        <button className="border border-[#F4F6F8] p-3 rounded-[6px] bg-[#FFF] cursor-pointer hover:bg-[#F9FAFB]"><DeleteIcon /></button>
-                        <button className="border border-[#F4F6F8] p-3 rounded-[6px] bg-[#FFF] cursor-pointer hover:bg-[#F9FAFB]"><EditIcon /></button>
+                        <button className="border border-[#F4F6F8] p-3 rounded-[6px] bg-[#FFF] cursor-pointer hover:bg-[#F9FAFB] text-[#919eab]"><DeleteIcon /></button>
+                        <button className="border border-[#F4F6F8] p-3 rounded-[6px] bg-[#FFF] cursor-pointer hover:bg-[#F9FAFB] text-[#889aac]"><EditIcon /></button>
                     </div>
                 )
             },
