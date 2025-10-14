@@ -1,43 +1,51 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardTopBar from "@/shared/dashboard/dashboardTopBar/DashboardTopBar";
 import RunningOrder from "@/shared/dashboard/eventDetails/RunningOrder";
+import TravelInformation from "@/shared/dashboard/eventDetails/TravelInformation";
+import type { ReactElement } from "react";
 
+type TTabsData =
+    {
+        label: string,
+        value: string,
+        content: ReactElement
+    }
 
-const tabsData = [
+const tabsData: TTabsData[] = [
     {
         label: "Running Order",
         value: "runningOrder",
-        content: <RunningOrder/>
+        content: <RunningOrder />
     },
     {
         label: "Confirm Rider",
         value: "confirmRider",
-        content: "hello"
+        content: <TravelInformation />
     },
     {
         label: "Travel Information",
         value: "travelInformation",
-        content: "hello"
+        content: <TravelInformation />
     },
     {
         label: "Transportation",
         value: "transportation",
-        content: "hello"
+        content: <RunningOrder />
     },
     {
         label: "Hotel & Dinner",
         value: "hotel&Dinner",
-        content: "hello"
+        content: <RunningOrder />
     },
     {
         label: "Venue",
         value: "venue",
-        content: "hello"
+        content: <RunningOrder />
     },
     {
         label: "Contacts",
         value: "contacts",
-        content: "hello"
+        content: <RunningOrder />
     },
 ];
 
