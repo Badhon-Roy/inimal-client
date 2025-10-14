@@ -2,15 +2,7 @@ import UserProfileImg from "@/assets/images/user.svg"
 import EditIcon from "@/components/SVG/EditIcon"
 import RightArrowIcon from "@/components/SVG/RightArrowIcon"
 import { NavLink } from "react-router-dom"
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import AlertIcon from "@/components/SVG/AlertIcon"
 import { toast } from "sonner"
 import { useForm, type FieldValues } from "react-hook-form"
@@ -80,7 +72,7 @@ const Profile = () => {
                     </NavLink>
                 </div>
                 {
-                    userInfo?.map((user: TUser , index: number) => (
+                    userInfo?.map((user: TUser, index: number) => (
                         <div key={index} className="grid grid-cols-3 gap-6 mt-8">
                             <div className="flex-1">
                                 <p className="text-[#637381]">Full Name</p>
@@ -99,7 +91,7 @@ const Profile = () => {
                                 <h2 className="text-[#37404A] text-[18px] font-semibold">{user?.email}</h2>
                             </div>
                             <div className="flex-1">
-                                <p className="text-[#637381]">Phome Number</p>
+                                <p className="text-[#637381]">Phone Number</p>
                                 <h2 className="text-[#37404A] text-[18px] font-semibold">{user?.phone_number}</h2>
                             </div>
                             <div className="flex-1">
@@ -168,7 +160,7 @@ const Profile = () => {
                                         <label className="text-[#637381] block mb-2">Current Password</label>
                                         <input
                                             type="text"
-                                            {...register("current_password", { required: "Current Password is required" },)} placeholder="Enter current password"
+                                            {...register("current_password", { required: "Current Password is required" })} placeholder="Enter current password"
                                             className="w-full text-[#37404A] text-[18px] font-semibold border px-4 py-2 rounded-[8px] focus:outline-primary"
                                         />
                                         {errors.current_password && <p className="text-red-500 text-sm">{errors.current_password.message}</p>}

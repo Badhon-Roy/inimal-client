@@ -105,7 +105,8 @@ const tabsData = [
         ],
     },
 ];
-const DashboardTopbar = ({title, subTitle} : {title : String, subTitle: String}) => {
+
+const DashboardTopBar = ({ title, subTitle }: { title: string, subTitle: string }) => {
     const [selected, setSelected] = useState("Last 24 Hours");
     return (
         <div className="flex justify-between items-center mb-12">
@@ -192,4 +193,4 @@ const DashboardTopbar = ({title, subTitle} : {title : String, subTitle: String})
     )
 }
 
-export default DashboardTopbar
+export default DashboardTopBar

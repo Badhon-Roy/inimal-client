@@ -14,11 +14,11 @@ import CircelIcon from "@/components/SVG/CircleIcon";
 import WatchIcon from "@/components/SVG/WatchIcon";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink } from "@/components/ui/pagination"
 import type { TEvent } from "@/types/event";
-import DashboardTopbar from "@/shared/dashboard/dashboardTopbar/DashboardTopbar";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import AlertIcon from "@/components/SVG/AlertIcon";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { TUpcommingEvent } from "@/types";
+import DashboardTopBar from "@/shared/dashboard/dashboardTopBar/DashboardTopBar";
 
 
 const Dashboard = () => {
@@ -62,7 +62,7 @@ const Dashboard = () => {
 
     // event delete system
     const handleEventDelete = (id: number) => {
-        // TODO: apply delte functionality
+        // TODO: apply delete functionality
         setEvents((preEvents) => preEvents?.filter((event) => event.id !== id))
     }
 
@@ -213,7 +213,7 @@ const Dashboard = () => {
 
     return (
         <div>
-            <DashboardTopbar title={"Dashboard"} subTitle={'Welcome back, Andrei'} />
+            <DashboardTopBar title={"Dashboard"} subTitle={'Welcome back, Andrei'} />
 
             <div className="flex justify-between items-start gap-5 w-full">
                 <div className="w-[70%]">

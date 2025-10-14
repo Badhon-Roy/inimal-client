@@ -6,6 +6,7 @@ import Settings from "@/pages/dashboard/settings/Settings";
 import Profile from "@/pages/dashboard/profile/Profile";
 import MainLayout from "@/layouts/MainLayout";
 import Home from "@/pages/home/Home";
+import EventDetails from "@/pages/dashboard/eventDetails/EventDetails";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/events",
         element: <Events />,
+      },
+      {
+        path: "/dashboard/event-details",
+        element: <EventDetails />,
       },
       {
         path: "/dashboard/profile",

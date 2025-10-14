@@ -6,4 +6,4 @@ const AlertIcon = () => {
     </svg>
 }
 
-export default AlertIcon
+export default AlertIcon;

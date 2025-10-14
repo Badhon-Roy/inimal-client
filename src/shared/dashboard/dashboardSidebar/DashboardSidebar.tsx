@@ -10,6 +10,7 @@ import { IoMdClose } from "react-icons/io";
 const navLinks = [
     { name: "Dashboard", path: "/dashboard", svg: HomeIcon },
     { name: "Events", path: "/dashboard/events", svg: EventIcon },
+    { name: "Events Details", path: "/dashboard/event-details", svg: EventIcon },
     { name: "Profile", path: "/dashboard/profile", svg: ProfileIcon },
     { name: "Settings", path: "/dashboard/settings", svg: SettingIcon },
     { name: "Home", path: "/", svg: HomeIcon },

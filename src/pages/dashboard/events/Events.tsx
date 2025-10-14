@@ -13,7 +13,7 @@ import {
     PaginationLink
 } from "@/components/ui/pagination"
 import type { TEvent } from "@/types/event";
-import DashboardTopbar from "@/shared/dashboard/dashboardTopbar/DashboardTopbar";
+import DashboardTopBar from "@/shared/dashboard/dashboardTopBar/DashboardTopBar";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 
@@ -171,7 +171,7 @@ const Events = () => {
 
     return (
         <div>
-            <DashboardTopbar title={"Upcoming Events"} subTitle={'Your upcoming events at a glance'} />
+            <DashboardTopBar title={"Upcoming Events"} subTitle={'Your upcoming events at a glance'} />
 
 
             <div className="w-full">
